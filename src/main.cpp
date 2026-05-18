@@ -1,3 +1,19 @@
+// main.cpp - setup/loop/UI
+//
+// gamepad_test - test Bluetooth/BLE controllers - targeting gamepads (8-position dpad or joystick, plus a couple buttons)
+// Copyright (c) 2026 David Van Wagner
+//
+// Classic Bluetooth supported only on classic ESP32 (e.g. not CoreS3, not ESP32-C4)
+// BLE (Bluetooth Low Energy) should be supported on any wireless capable ESP32
+//
+// Dependencies, derivations include
+// Bluepad32 example Copyright 2019, 2016-2024 Ricardo Quesada 
+// Bluepad32 library Copyright 2019, 2016-2024 Ricardo Quesada
+// BTStack library Copyright (C) 2009, 2017 BlueKitchen GmbH
+//
+// Open source for individual, non-commercial use (BlueKitchen restriction)
+// see LICENSE for full details
+
 #include <Arduino.h>
 #include <M5Unified.h>
 #include <WiFi.h>
@@ -40,10 +56,44 @@ void initDisplay()
 #endif
 }
 
+void drawCredit()
+{
+  auto saveRotation = M5.Lcd.getRotation();
+  M5.Lcd.setRotation(2);
+  const char *credit = " davevw.com ";
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.setTextColor(WHITE, BLACK);
+  int x = (M5.Lcd.width() - M5.Lcd.textWidth(credit) - 16) / 2;
+  int y = 0;
+  M5.Lcd.setCursor(x, y);
+  M5.Lcd.print(credit);
+  M5.Lcd.setRotation(saveRotation);
+  M5.Lcd.endTransaction();
+}
+
+void drawInstructions()
+{
+  const char *instructions[] = {
+    "Test Bluetooth HID devices",
+    "",
+    "Auto binds to pairing devices",
+    "gampad activity shows here",
+    "and see serial monitoring",
+    "for more devices & info"
+  };
+  int n = sizeof(instructions)/sizeof(*instructions);
+
+  //M5.Lcd.setFont(&lv_font_montserrat_10);
+  M5.Lcd.setTextSize(1.5);
+  M5.Lcd.setCursor(0,0);
+  for (int i=0; i<n; ++i)
+    M5.Lcd.println(instructions[i]);
+}
+
 // Draw a simple white-on-black title centered if possible
 void drawTitle()
 {
-  const char *title = "ble_gamepad_test";
+  const char *title = "gamepad_test";
 #ifdef HAVE_TFT
   tft.setTextSize(2);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
@@ -83,7 +133,7 @@ void drawImage()
     const int imgH = 183;
 
     // Calculate centering coordinates
-    int x = screenW - imgW - 5;
+    int x = screenW - imgW - 16;
     int y = (screenH - imgH) / 2;
 
     uint8_t image_91x183[] = {
@@ -129,14 +179,16 @@ void setup() {
     M5.begin();           // Necessary for Core 16M hardware stabilization
     initDisplay(); 
     drawImage();
+    drawCredit();
     drawTitle();
+    drawInstructions();
     
-    WiFi.mode(WIFI_OFF); // Disable WiFi to reduce interference with BLE scanning   
+    WiFi.mode(WIFI_OFF); // Disable WiFi to reduce interference with Bluetooth/BLE scanning   
 
     // 2. Debug Output
     Serial.begin(115200);
     Serial.println("Starting BluePad32 Test...");
-    Serial.printf("Free heap before BLE: %d bytes\n", ESP.getFreeHeap());
+    Serial.printf("Free heap before BluePad32 setup: %d bytes\n", ESP.getFreeHeap());
 
     setup_Bluepad();
 }

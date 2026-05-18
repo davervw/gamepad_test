@@ -2,7 +2,7 @@
 
 BTStack library - proprietary license
 BluePad32 library - Apache 2.0
-_test_app - Apache 2.0 (modified from example from BluePad32 library)
+gamepad_test APP - Apache 2.0 (modified from example from BluePad32 library)
 
 Scroll through this file to see the various coyprights and licenses
 
@@ -51,7 +51,7 @@ contact@bluekitchen-gmbh.com
 ===============================================================================
 
 Bluepad32    Copyright 2019 Ricardo Quesada
-_testapp     revisions Copyright 2026 David R. Van Wagner
+gamepad_test revisions Copyright 2026 David R. Van Wagner
              derived from Bluepad32_ESP32/examples/Controller/Controller.ino
 
 Notice:
