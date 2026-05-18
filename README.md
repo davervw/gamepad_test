@@ -11,6 +11,8 @@ and see serial monitoring
 for more devices & info
 ```
 
+This is a graphical user interface for gamepads paired via [Bluepad32](https://github.com/ricardoquesada/bluepad32) test
+
 Targeting and tested with
 
 * M5Core Basic (supports Classic Bluetooth and BLE)
