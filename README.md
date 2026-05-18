@@ -15,9 +15,19 @@ This is a graphical user interface for gamepads paired via [Bluepad32](https://g
 
 Targeting and tested with
 
-* M5Core Basic (supports Classic Bluetooth and BLE)
-* M5CoreS3 (supports BLE only)
+|Model        |Classic Bluetooth|BLE|
+|-------------|-----------------|---|
+|M5Stick-C    |YES              |YES|
+|M5Stick-CPlus|YES              |YES|
+|M5Core Basic |YES              |YES|
+|M5Core Fire  |YES              |YES|
+|M5CoreS3     |NO<sup>1         |YES|
+|Cardputer    |NO<sup>1         |YES|
+|AtomS3       |NO<sup>1         |YES|
+|AtomS3R      |NO<sup>1         |YES|
 
-Also see
+<sup>1</sup> ESP32-S3 doesn't include Classic Bluetooth support
+
+## Also see ##
 
 * [m5_minijoystickc_gamepad](https://github.com/davervw/m5_minijoystickc_gamepad)
