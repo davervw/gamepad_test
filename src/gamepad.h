@@ -14,5 +14,11 @@
 // Open source for individual, non-commercial use (BlueKitchen restriction)
 // see LICENSE for full details
 
-extern void setup_Bluepad();
-extern void loop_Bluepad();
+class MyGamepad
+{
+public:
+    void setup_Bluepad();
+    void loop_Bluepad();
+};
+
+extern MyGamepad MyController;

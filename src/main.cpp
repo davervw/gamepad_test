@@ -244,11 +244,11 @@ void setup() {
     Serial.println("Starting BluePad32 Test...");
     Serial.printf("Free heap before BluePad32 setup: %d bytes\n", ESP.getFreeHeap());
 
-    setup_Bluepad();
+    MyController.setup_Bluepad();
 }
 
 void loop() {
     M5.update();
 
-    loop_Bluepad();
+    MyController.loop_Bluepad();
 }

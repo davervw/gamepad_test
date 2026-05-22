@@ -17,6 +17,21 @@
 #include <Bluepad32.h>
 #include "gamepad.h"
 
+MyGamepad MyController;
+
+void setup_Bluepad();
+void loop_Bluepad();
+
+void MyGamepad::setup_Bluepad()
+{
+    ::setup_Bluepad();
+}
+
+void MyGamepad::loop_Bluepad()
+{
+    ::loop_Bluepad();
+}
+
 #undef BP32_MAX_GAMEPADS
 #define BP32_MAX_GAMEPADS 1
 
