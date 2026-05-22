@@ -252,4 +252,5 @@ void setup() {
 void loop() {
     M5.update();
     MyController.check();
+    vTaskDelay(1);
 }
