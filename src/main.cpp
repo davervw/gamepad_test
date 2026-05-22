@@ -241,8 +241,8 @@ void setup() {
 
     // 2. Debug Output
     Serial.begin(115200);
-    Serial.println("Starting BluePad32 Test...");
-    Serial.printf("Free heap before BluePad32 setup: %d bytes\n", ESP.getFreeHeap());
+    Serial.println("Starting Gamepad Test...");
+    Serial.printf("Free heap before Gamepad begin: %d bytes\n", ESP.getFreeHeap());
 
     MyController.begin();
     MyController.onUpdate = ::drawControls;

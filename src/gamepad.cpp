@@ -32,6 +32,8 @@ void MyGamepad::check()
     ::loop_Bluepad();
 }
 
+//#define CONTROLLER_DIAGNOSTICS
+
 #undef BP32_MAX_GAMEPADS
 #define BP32_MAX_GAMEPADS 1
 
@@ -43,20 +45,26 @@ void onConnectedController(ControllerPtr ctl) {
     bool foundEmptySlot = false;
     for (int i = 0; i < BP32_MAX_GAMEPADS; i++) {
         if (myControllers[i] == nullptr) {
+#ifdef CONTROLLER_DIAGNOSTICS
             Serial.printf("CALLBACK: Controller is connected, index=%d\n", i);
+#endif            
             // Additionally, you can get certain gamepad properties like:
             // Model, VID, PID, BTAddr, flags, etc.
             ControllerProperties properties = ctl->getProperties();
+#ifdef CONTROLLER_DIAGNOSTICS
             Serial.printf("Controller model: %s, VID=0x%04x, PID=0x%04x\n", ctl->getModelName().c_str(), properties.vendor_id,
                            properties.product_id);
-            myControllers[i] = ctl;
+#endif
+                           myControllers[i] = ctl;
             foundEmptySlot = true;
             break;
         }
     }
+#ifdef CONTROLLER_DIAGNOSTICS
     if (!foundEmptySlot) {
         Serial.println("CALLBACK: Controller connected, but could not found empty slot");
     }
+#endif
 }
 
 void onDisconnectedController(ControllerPtr ctl) {
@@ -64,16 +72,20 @@ void onDisconnectedController(ControllerPtr ctl) {
 
     for (int i = 0; i < BP32_MAX_GAMEPADS; i++) {
         if (myControllers[i] == ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
             Serial.printf("CALLBACK: Controller disconnected from index=%d\n", i);
+#endif
             myControllers[i] = nullptr;
             foundController = true;
             break;
         }
     }
 
+#ifdef CONTROLLER_DIAGNOSTICS
     if (!foundController) {
         Serial.println("CALLBACK: Controller disconnected, but not found in myControllers");
     }
+#endif    
 
     MyController.onDisconnect();
 }
@@ -81,6 +93,7 @@ void onDisconnectedController(ControllerPtr ctl) {
 void dumpGamepad(ControllerPtr ctl) {
     MyController.onUpdate(ctl->dpad(), ctl->buttons());
 
+#ifdef CONTROLLER_DIAGNOSTICS
     Serial.printf(
         "idx=%d, dpad: 0x%02x, buttons: 0x%04x, axis L: %4d, %4d, axis R: %4d, %4d, brake: %4d, throttle: %4d, "
         "misc: 0x%02x, gyro x:%6d y:%6d z:%6d, accel x:%6d y:%6d z:%6d\n",
@@ -101,9 +114,11 @@ void dumpGamepad(ControllerPtr ctl) {
         ctl->accelY(),       // Accelerometer Y
         ctl->accelZ()        // Accelerometer Z
     );
+#endif    
 }
 
 void dumpMouse(ControllerPtr ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
     Serial.printf("idx=%d, buttons: 0x%04x, scrollWheel=0x%04x, delta X: %4d, delta Y: %4d\n",
                    ctl->index(),        // Controller Index
                    ctl->buttons(),      // bitmask of pressed buttons
@@ -111,9 +126,11 @@ void dumpMouse(ControllerPtr ctl) {
                    ctl->deltaX(),       // (-511 - 512) left X Axis
                    ctl->deltaY()        // (-511 - 512) left Y axis
     );
+#endif
 }
 
 void dumpKeyboard(ControllerPtr ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
     static const char* key_names[] = {
         // clang-format off
         // To avoid having too much noise in this file, only a few keys are mapped to strings.
@@ -151,9 +168,11 @@ void dumpKeyboard(ControllerPtr ctl) {
         }
     }
     Console.printf("\n");
+#endif
 }
 
 void dumpBalanceBoard(ControllerPtr ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
     Serial.printf("idx=%d,  TL=%u, TR=%u, BL=%u, BR=%u, temperature=%d\n",
                    ctl->index(),        // Controller Index
                    ctl->topLeft(),      // top-left scale
@@ -162,9 +181,11 @@ void dumpBalanceBoard(ControllerPtr ctl) {
                    ctl->bottomRight(),  // bottom-right scale
                    ctl->temperature()   // temperature: used to adjust the scale value's precision
     );
+#endif
 }
 
 void processGamepad(ControllerPtr ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
     // There are different ways to query whether a button is pressed.
     // By query each button individually:
     //  a(), b(), x(), y(), l1(), etc...
@@ -208,6 +229,7 @@ void processGamepad(ControllerPtr ctl) {
         ctl->playDualRumble(0 /* delayedStartMs */, 250 /* durationMs */, 0x80 /* weakMagnitude */,
                             0x40 /* strongMagnitude */);
     }
+#endif
 
     // Another way to query controller data is by getting the buttons() function.
     // See how the different "dump*" functions dump the Controller info.
@@ -215,6 +237,7 @@ void processGamepad(ControllerPtr ctl) {
 }
 
 void processMouse(ControllerPtr ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
     // This is just an example.
     if (ctl->scrollWheel() > 0) {
         // Do Something
@@ -224,9 +247,11 @@ void processMouse(ControllerPtr ctl) {
 
     // See "dumpMouse" for possible things to query.
     dumpMouse(ctl);
+#endif    
 }
 
 void processKeyboard(ControllerPtr ctl) {
+#ifdef CONTROLLER_DIAGNOSTICS
     if (!ctl->isAnyKeyPressed())
         return;
 
@@ -249,6 +274,7 @@ void processKeyboard(ControllerPtr ctl) {
         // Do something else
         Serial.println("Key 'Left Arrow' pressed");
     }
+#endif
 
     // See "dumpKeyboard" for possible things to query.
     dumpKeyboard(ctl);
@@ -276,7 +302,9 @@ void processControllers() {
             } else if (myController->isBalanceBoard()) {
                 processBalanceBoard(myController);
             } else {
+#ifdef CONTROLLER_DIAGNOSTICS
                 Serial.println("Unsupported controller");
+#endif
             }
         }
     }
@@ -285,9 +313,13 @@ void processControllers() {
 // Arduino setup function. Runs in CPU 1
 void setup_Bluepad() {
     //Serial.begin(115200);
+#ifdef CONTROLLER_DIAGNOSTICS
     Serial.printf("Firmware: %s\n", BP32.firmwareVersion());
+#endif
     const uint8_t* addr = BP32.localBdAddress();
+#ifdef CONTROLLER_DIAGNOSTICS
     Serial.printf("BD Addr: %2X:%2X:%2X:%2X:%2X:%2X\n", addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+#endif
 
     // Setup the Bluepad32 callbacks
     BP32.setup(&onConnectedController, &onDisconnectedController);
