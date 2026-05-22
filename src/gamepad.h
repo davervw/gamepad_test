@@ -7,8 +7,8 @@
 // BLE (Bluetooth Low Energy) should be supported on any wireless capable ESP32
 //
 // Dependencies, derivations include
-// Bluepad32 example Copyright 2019, 2016-2024 Ricardo Quesada 
-// Bluepad32 library Copyright 2019, 2016-2024 Ricardo Quesada
+// Bluepad32 example Copyright 2016-2024 Ricardo Quesada 
+// Bluepad32 library Copyright 2016-2024 Ricardo Quesada
 // BTStack library Copyright (C) 2009, 2017 BlueKitchen GmbH
 //
 // Open source for individual, non-commercial use (BlueKitchen restriction)
@@ -17,8 +17,10 @@
 class MyGamepad
 {
 public:
-    void setup_Bluepad();
-    void loop_Bluepad();
+    void begin();
+    void check();
+    void (*onUpdate)(int dpad, int buttons) = 0;
+    void (*onDisconnect)() = 0;
 };
 
 extern MyGamepad MyController;

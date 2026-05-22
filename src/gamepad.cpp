@@ -7,8 +7,8 @@
 // BLE (Bluetooth Low Energy) should be supported on any wireless capable ESP32
 //
 // Dependencies, derivations include
-// Bluepad32 example Copyright 2019, 2016-2024 Ricardo Quesada 
-// Bluepad32 library Copyright 2019, 2016-2024 Ricardo Quesada
+// Bluepad32 example Copyright 2016-2024 Ricardo Quesada 
+// Bluepad32 library Copyright 2016-2024 Ricardo Quesada
 // BTStack library Copyright (C) 2009, 2017 BlueKitchen GmbH
 //
 // Open source for individual, non-commercial use (BlueKitchen restriction)
@@ -22,12 +22,12 @@ MyGamepad MyController;
 void setup_Bluepad();
 void loop_Bluepad();
 
-void MyGamepad::setup_Bluepad()
+void MyGamepad::begin()
 {
     ::setup_Bluepad();
 }
 
-void MyGamepad::loop_Bluepad()
+void MyGamepad::check()
 {
     ::loop_Bluepad();
 }
@@ -36,9 +36,6 @@ void MyGamepad::loop_Bluepad()
 #define BP32_MAX_GAMEPADS 1
 
 ControllerPtr myControllers[BP32_MAX_GAMEPADS];
-
-extern void drawControls(int dpad, int buttons);
-extern void eraseControls();
 
 // This callback gets called any time a new gamepad is connected.
 // Up to 4 gamepads can be connected at the same time.
@@ -78,11 +75,11 @@ void onDisconnectedController(ControllerPtr ctl) {
         Serial.println("CALLBACK: Controller disconnected, but not found in myControllers");
     }
 
-    eraseControls();
+    MyController.onDisconnect();
 }
 
 void dumpGamepad(ControllerPtr ctl) {
-    drawControls(ctl->dpad(), ctl->buttons());
+    MyController.onUpdate(ctl->dpad(), ctl->buttons());
 
     Serial.printf(
         "idx=%d, dpad: 0x%02x, buttons: 0x%04x, axis L: %4d, %4d, axis R: %4d, %4d, brake: %4d, throttle: %4d, "

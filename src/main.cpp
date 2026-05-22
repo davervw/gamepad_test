@@ -244,11 +244,12 @@ void setup() {
     Serial.println("Starting BluePad32 Test...");
     Serial.printf("Free heap before BluePad32 setup: %d bytes\n", ESP.getFreeHeap());
 
-    MyController.setup_Bluepad();
+    MyController.begin();
+    MyController.onUpdate = ::drawControls;
+    MyController.onDisconnect = ::eraseControls;
 }
 
 void loop() {
     M5.update();
-
-    MyController.loop_Bluepad();
+    MyController.check();
 }
