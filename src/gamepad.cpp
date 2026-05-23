@@ -87,11 +87,13 @@ void onDisconnectedController(ControllerPtr ctl) {
     }
 #endif    
 
-    MyController.onDisconnect();
+    if (MyController.onDisconnect != 0)
+        MyController.onDisconnect();
 }
 
 void dumpGamepad(ControllerPtr ctl) {
-    MyController.onUpdate(ctl->dpad(), ctl->buttons());
+    if (MyController.onUpdate != 0)
+        MyController.onUpdate(ctl->dpad(), ctl->buttons());
 
 #ifdef CONTROLLER_DIAGNOSTICS
     Serial.printf(
