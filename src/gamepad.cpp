@@ -32,7 +32,7 @@ void MyGamepad::check()
     ::loop_Bluepad();
 }
 
-//#define CONTROLLER_DIAGNOSTICS
+#define CONTROLLER_DIAGNOSTICS
 
 #undef BP32_MAX_GAMEPADS
 #define BP32_MAX_GAMEPADS 1
