@@ -32,3 +32,5 @@ Targeting and tested with
 
 * [m5_minijoystickc_gamepad](https://github.com/davervw/m5_minijoystickc_gamepad)
 * [Cardputer Game Station Emulators - BLE edition](https://github.com/davervw/Cardputer-Game-Station-Emulators)
+* [ble_gamepad_KanoPixelKit](https://github.com/davervw/ble_gamepad_KanoPixelKit)
+* [blog.davevw.com](https://techwithdave.davevw.com/2026/05/gamepad-test.html)
